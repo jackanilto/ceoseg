@@ -1,9 +1,13 @@
-import { MapPin, Clock, Phone, MessageCircle } from "lucide-react";
+import { motion } from "framer-motion";
+import { MapPin, Clock, Phone, MessageCircle, Send, User, FileText } from "lucide-react";
+import { useState } from "react";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
+/* ─── WhatsApp CTA banner ─── */
 const WhatsAppCTA = () => {
+  const section = useScrollReveal();
   return (
     <section className="py-20 bg-gradient-navy relative overflow-hidden">
-      {/* Pattern */}
       <div
         className="absolute inset-0 opacity-5"
         style={{
@@ -11,11 +15,16 @@ const WhatsAppCTA = () => {
           backgroundSize: "40px 40px",
         }}
       />
-      {/* Decorative circles */}
       <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full border border-gold/20" />
       <div className="absolute -bottom-20 -left-20 w-60 h-60 rounded-full border border-gold/10" />
 
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <motion.div
+        ref={section.ref}
+        initial={{ opacity: 0, y: 30 }}
+        animate={section.isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
+      >
         <div className="flex items-center justify-center gap-3 mb-6">
           <div className="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center shadow-lg">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="white">
@@ -46,16 +55,154 @@ const WhatsAppCTA = () => {
           <Clock size={14} />
           <span className="font-body text-sm">Disponível 24 horas, 7 dias por semana</span>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };
 
+/* ─── Insurance type options ─── */
+const insuranceTypes = [
+  "Seguro Auto",
+  "Seguro de Vida",
+  "Seguro Residência",
+  "Seguro Empresa",
+  "Seguro Carga",
+  "Seguro Viagem",
+  "Outro",
+];
+
+/* ─── Contact form → opens WhatsApp with pre-filled message ─── */
+const ContactForm = () => {
+  const formReveal = useScrollReveal();
+  const [form, setForm] = useState({ name: "", phone: "", type: "", message: "" });
+  const [sent, setSent] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const text = encodeURIComponent(
+      `Olá! Me chamo *${form.name}*.\n` +
+      `📱 Telefone: ${form.phone}\n` +
+      `🛡️ Interesse: ${form.type || "Não informado"}\n` +
+      `💬 Mensagem: ${form.message || "Gostaria de mais informações."}`
+    );
+    window.open(`https://wa.me/5522997880606?text=${text}`, "_blank");
+    setSent(true);
+    setTimeout(() => setSent(false), 4000);
+  };
+
+  return (
+    <motion.div
+      ref={formReveal.ref}
+      initial={{ opacity: 0, x: 30 }}
+      animate={formReveal.isInView ? { opacity: 1, x: 0 } : {}}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="bg-card border border-border rounded-3xl p-8 shadow-card"
+    >
+      <h3 className="font-display text-2xl font-bold text-foreground mb-1">
+        Solicite seu seguro
+      </h3>
+      <p className="font-body text-muted-foreground text-sm mb-6">
+        Preencha abaixo e falaremos pelo WhatsApp em instantes.
+      </p>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Name */}
+        <div>
+          <label className="font-body text-sm font-medium text-foreground mb-1.5 flex items-center gap-1.5">
+            <User size={14} className="text-primary/60" /> Seu nome *
+          </label>
+          <input
+            name="name"
+            value={form.name}
+            onChange={handleChange}
+            required
+            placeholder="Ex: João Silva"
+            className="w-full px-4 py-3 rounded-xl border border-border bg-background font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40 transition"
+          />
+        </div>
+
+        {/* Phone */}
+        <div>
+          <label className="font-body text-sm font-medium text-foreground mb-1.5 flex items-center gap-1.5">
+            <Phone size={14} className="text-primary/60" /> Telefone / WhatsApp *
+          </label>
+          <input
+            name="phone"
+            value={form.phone}
+            onChange={handleChange}
+            required
+            placeholder="(22) 99999-0000"
+            className="w-full px-4 py-3 rounded-xl border border-border bg-background font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40 transition"
+          />
+        </div>
+
+        {/* Insurance type */}
+        <div>
+          <label className="font-body text-sm font-medium text-foreground mb-1.5 flex items-center gap-1.5">
+            <FileText size={14} className="text-primary/60" /> Tipo de seguro
+          </label>
+          <select
+            name="type"
+            value={form.type}
+            onChange={handleChange}
+            className="w-full px-4 py-3 rounded-xl border border-border bg-background font-body text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40 transition"
+          >
+            <option value="">Selecione...</option>
+            {insuranceTypes.map((t) => (
+              <option key={t} value={t}>{t}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Message */}
+        <div>
+          <label className="font-body text-sm font-medium text-foreground mb-1.5 block">
+            Mensagem (opcional)
+          </label>
+          <textarea
+            name="message"
+            value={form.message}
+            onChange={handleChange}
+            rows={3}
+            placeholder="Conte um pouco mais sobre o que você precisa..."
+            className="w-full px-4 py-3 rounded-xl border border-border bg-background font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40 transition resize-none"
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="w-full flex items-center justify-center gap-3 bg-green-500 hover:bg-green-600 text-white font-body font-bold px-6 py-4 rounded-xl text-base transition-all duration-200 hover:scale-[1.02] shadow-md"
+        >
+          <Send size={18} />
+          {sent ? "Abrindo WhatsApp..." : "Enviar pelo WhatsApp"}
+        </button>
+        <p className="font-body text-xs text-muted-foreground text-center">
+          Ao enviar, você será redirecionado ao WhatsApp com sua mensagem preenchida.
+        </p>
+      </form>
+    </motion.div>
+  );
+};
+
+/* ─── Main Contact section ─── */
 const Contact = () => {
+  const header = useScrollReveal();
+  const info = useScrollReveal();
+
   return (
     <section id="contato" className="py-24 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <motion.div
+          ref={header.ref}
+          initial={{ opacity: 0, y: 30 }}
+          animate={header.isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="text-center mb-16"
+        >
           <div className="inline-flex items-center gap-2 bg-primary/8 border border-primary/15 rounded-full px-4 py-1.5 mb-4">
             <div className="w-2 h-2 rounded-full bg-gold" />
             <span className="font-body text-primary/70 text-sm font-medium tracking-wide">
@@ -69,11 +216,17 @@ const Contact = () => {
           <p className="font-body text-muted-foreground text-lg max-w-lg mx-auto">
             Ligue-nos a qualquer hora. Estamos prontos para atender você e encontrar a melhor solução.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Contact info */}
-          <div className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          {/* Contact info + image */}
+          <motion.div
+            ref={info.ref}
+            initial={{ opacity: 0, x: -30 }}
+            animate={info.isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="space-y-6"
+          >
             {[
               {
                 icon: Phone,
@@ -115,20 +268,18 @@ const Contact = () => {
                 </Wrapper>
               );
             })}
-          </div>
 
-          {/* Agent image */}
-          <div className="relative">
-            <div className="relative rounded-3xl overflow-hidden shadow-lg">
+            {/* Agent image */}
+            <div className="relative rounded-3xl overflow-hidden shadow-lg mt-2">
               <img
                 src="https://ceoseg.com.br/wp-content/uploads/2024/08/agente-ceoseg-1024x512.jpg"
                 alt="Agente CEO Corretora de Seguros"
-                className="w-full h-80 object-cover"
+                className="w-full h-56 object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-transparent to-transparent" />
-              <div className="absolute bottom-6 left-6 right-6">
-                <p className="font-display text-background text-xl font-bold mb-2">
-                  Encontre um agente de seguros
+              <div className="absolute bottom-5 left-5 right-5">
+                <p className="font-display text-background text-lg font-bold mb-2">
+                  Fale com um especialista
                 </p>
                 <a
                   href="https://wa.me/5522997880606"
@@ -142,21 +293,19 @@ const Contact = () => {
                   Falar no WhatsApp
                 </a>
               </div>
-            </div>
 
-            {/* Floating card */}
-            <div className="absolute -top-4 -right-4 bg-card border border-border rounded-2xl p-4 shadow-lg">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-green-500/10 rounded-xl flex items-center justify-center">
-                  <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-                </div>
-                <div>
-                  <p className="font-body text-xs text-muted-foreground">Status</p>
-                  <p className="font-body text-sm font-semibold text-foreground">Online agora</p>
+              {/* Online badge */}
+              <div className="absolute top-4 right-4 bg-card border border-border rounded-2xl px-3 py-2 shadow-lg">
+                <div className="flex items-center gap-2">
+                  <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse" />
+                  <p className="font-body text-xs font-semibold text-foreground">Online agora</p>
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
+
+          {/* Contact form */}
+          <ContactForm />
         </div>
       </div>
     </section>

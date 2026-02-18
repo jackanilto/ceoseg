@@ -1,3 +1,6 @@
+import { motion } from "framer-motion";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
+
 const partners = [
   { name: "Bradesco Seguros", logo: "https://ceoseg.com.br/wp-content/uploads/2024/08/Ceoseg-Bradesco-80x80-1.png" },
   { name: "HDI Seguros", logo: "https://ceoseg.com.br/wp-content/uploads/2024/08/Ceoseg-HDI_Seguros-80x80-1.png" },
@@ -14,12 +17,20 @@ const partners = [
 ];
 
 const Partners = () => {
+  const header = useScrollReveal();
+  const footer = useScrollReveal();
   const doubled = [...partners, ...partners];
 
   return (
-    <section id="parceiros" className="py-24 bg-secondary/50">
+    <section id="parceiros" className="py-24 bg-secondary/50 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
-        <div className="text-center">
+        <motion.div
+          ref={header.ref}
+          initial={{ opacity: 0, y: 30 }}
+          animate={header.isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="text-center"
+        >
           <div className="inline-flex items-center gap-2 bg-primary/8 border border-primary/15 rounded-full px-4 py-1.5 mb-4">
             <div className="w-2 h-2 rounded-full bg-gold" />
             <span className="font-body text-primary/70 text-sm font-medium tracking-wide">
@@ -34,14 +45,14 @@ const Partners = () => {
             Trabalhamos com as principais seguradoras do mercado para oferecer
             a melhor cobertura com o melhor custo-benefício para você.
           </p>
-        </div>
+        </motion.div>
       </div>
 
-      {/* Scrolling carousel */}
-      <div className="overflow-hidden relative">
+      {/* Scrolling carousel — fullwidth but clipped */}
+      <div className="relative w-full overflow-hidden">
         {/* Fade masks */}
-        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-secondary/50 to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-secondary/50 to-transparent z-10 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-secondary/80 to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-secondary/80 to-transparent z-10 pointer-events-none" />
 
         <div className="flex gap-6 animate-scroll" style={{ width: "max-content" }}>
           {doubled.map((partner, index) => (
@@ -68,11 +79,18 @@ const Partners = () => {
       </div>
 
       {/* Count */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 text-center">
+      <motion.div
+        ref={footer.ref}
+        initial={{ opacity: 0 }}
+        animate={footer.isInView ? { opacity: 1 } : {}}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 text-center"
+      >
         <p className="font-body text-muted-foreground text-sm">
-          <span className="font-bold text-primary">{partners.length} seguradoras</span> parceiras para oferecer a melhor cobertura
+          <span className="font-bold text-primary">{partners.length} seguradoras</span>{" "}
+          parceiras para oferecer a melhor cobertura
         </p>
-      </div>
+      </motion.div>
     </section>
   );
 };
