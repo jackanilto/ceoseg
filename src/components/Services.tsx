@@ -1,11 +1,12 @@
+import { motion } from "framer-motion";
 import { Heart, Car, Home, Package, Building2, Plane } from "lucide-react";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const services = [
   {
     icon: Heart,
     title: "Seguro de Vida",
-    description:
-      "Quanto vale a tranquilidade da sua família? Proteja quem você mais ama com o seguro de vida ideal.",
+    description: "Quanto vale a tranquilidade da sua família? Proteja quem você mais ama com o seguro de vida ideal.",
     color: "from-rose-500/10 to-rose-600/5",
     iconColor: "text-rose-500",
     iconBg: "bg-rose-500/10",
@@ -13,8 +14,7 @@ const services = [
   {
     icon: Car,
     title: "Seguro Auto",
-    description:
-      "Seu veículo é parte essencial da sua rotina. Garanta a segurança e tranquilidade ao dirigir com o seguro auto.",
+    description: "Seu veículo é parte essencial da sua rotina. Garanta a segurança e tranquilidade ao dirigir com o seguro auto.",
     color: "from-blue-500/10 to-blue-600/5",
     iconColor: "text-blue-500",
     iconBg: "bg-blue-500/10",
@@ -22,8 +22,7 @@ const services = [
   {
     icon: Home,
     title: "Seguro Residência",
-    description:
-      "Sua casa é seu refúgio. Proteja seu lar com o seguro residência, em todos os momentos.",
+    description: "Sua casa é seu refúgio. Proteja seu lar com o seguro residência, em todos os momentos.",
     color: "from-emerald-500/10 to-emerald-600/5",
     iconColor: "text-emerald-500",
     iconBg: "bg-emerald-500/10",
@@ -31,8 +30,7 @@ const services = [
   {
     icon: Package,
     title: "Seguro Carga",
-    description:
-      "Transporte suas mercadorias com confiança. Oferecemos seguro de carga para proteger seu negócio de imprevistos.",
+    description: "Transporte suas mercadorias com confiança. Oferecemos seguro de carga para proteger seu negócio de imprevistos.",
     color: "from-amber-500/10 to-amber-600/5",
     iconColor: "text-amber-600",
     iconBg: "bg-amber-500/10",
@@ -40,8 +38,7 @@ const services = [
   {
     icon: Building2,
     title: "Seguro Empresa",
-    description:
-      "Seu negócio é seu maior patrimônio. Com nosso seguro empresa, você foca no crescimento enquanto nós cuidamos da segurança.",
+    description: "Seu negócio é seu maior patrimônio. Com nosso seguro empresa, você foca no crescimento enquanto nós cuidamos da segurança.",
     color: "from-indigo-500/10 to-indigo-600/5",
     iconColor: "text-indigo-500",
     iconBg: "bg-indigo-500/10",
@@ -49,8 +46,7 @@ const services = [
   {
     icon: Plane,
     title: "Seguro Viagem",
-    description:
-      "Aproveite suas viagens ao máximo, sem preocupações. Proteja sua jornada com nosso seguro viagem e viaje tranquilo.",
+    description: "Aproveite suas viagens ao máximo, sem preocupações. Proteja sua jornada com nosso seguro viagem e viaje tranquilo.",
     color: "from-sky-500/10 to-sky-600/5",
     iconColor: "text-sky-500",
     iconBg: "bg-sky-500/10",
@@ -58,11 +54,21 @@ const services = [
 ];
 
 const Services = () => {
+  const header = useScrollReveal();
+  const grid = useScrollReveal();
+  const banner = useScrollReveal();
+
   return (
     <section id="servicos" className="py-24 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16">
+        <motion.div
+          ref={header.ref}
+          initial={{ opacity: 0, y: 30 }}
+          animate={header.isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="text-center mb-16"
+        >
           <div className="inline-flex items-center gap-2 bg-primary/8 border border-primary/15 rounded-full px-4 py-1.5 mb-4">
             <div className="w-2 h-2 rounded-full bg-gold" />
             <span className="font-body text-primary/70 text-sm font-medium tracking-wide">
@@ -77,21 +83,21 @@ const Services = () => {
             Escolha o seguro que melhor atende à sua necessidade. Trabalhamos
             com as melhores seguradoras do mercado para garantir sua proteção.
           </p>
-        </div>
+        </motion.div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div ref={grid.ref} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service, index) => {
             const Icon = service.icon;
             return (
-              <div
+              <motion.div
                 key={service.title}
+                initial={{ opacity: 0, y: 40 }}
+                animate={grid.isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
                 className="group relative bg-card rounded-2xl p-8 border border-border hover:border-primary/20 transition-all duration-300 hover:-translate-y-1 shadow-card hover:shadow-lg cursor-pointer overflow-hidden"
-                style={{ animationDelay: `${index * 100}ms` }}
               >
-                {/* Background gradient */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl`} />
-
                 <div className="relative z-10">
                   <div className={`w-14 h-14 ${service.iconBg} rounded-xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300`}>
                     <Icon className={`${service.iconColor} w-7 h-7`} strokeWidth={1.5} />
@@ -102,7 +108,6 @@ const Services = () => {
                   <p className="font-body text-muted-foreground text-sm leading-relaxed">
                     {service.description}
                   </p>
-
                   <a
                     href="http://ceoseg.aggilizador.com.br/"
                     target="_blank"
@@ -116,13 +121,19 @@ const Services = () => {
                     </svg>
                   </a>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
 
         {/* CTA Banner */}
-        <div className="mt-16 bg-gradient-navy rounded-3xl p-10 text-center relative overflow-hidden">
+        <motion.div
+          ref={banner.ref}
+          initial={{ opacity: 0, y: 30 }}
+          animate={banner.isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="mt-16 bg-gradient-navy rounded-3xl p-10 text-center relative overflow-hidden"
+        >
           <div className="absolute inset-0 opacity-5" style={{
             backgroundImage: `radial-gradient(circle at 2px 2px, hsl(45 90% 55%) 1px, transparent 0)`,
             backgroundSize: "32px 32px",
@@ -146,7 +157,7 @@ const Services = () => {
               Falar com um especialista
             </a>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

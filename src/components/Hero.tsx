@@ -1,4 +1,11 @@
+import { motion } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
+
+const fadeProps = (delay: number) => ({
+  initial: { opacity: 0, y: 30 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.6, delay, ease: [0.25, 0.46, 0.45, 0.94] as const },
+});
 
 const Hero = () => {
   return (
@@ -14,7 +21,6 @@ const Hero = () => {
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-hero opacity-85" />
-        {/* Decorative overlay pattern */}
         <div
           className="absolute inset-0 opacity-5"
           style={{
@@ -28,33 +34,36 @@ const Hero = () => {
       <div className="absolute left-0 top-1/4 w-1 h-32 bg-gradient-gold rounded-r-full opacity-70" />
       <div className="absolute left-0 top-1/4 mt-36 w-1 h-16 bg-gradient-gold rounded-r-full opacity-40" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="max-w-2xl">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-gold/20 border border-gold/40 rounded-full px-4 py-1.5 mb-6 backdrop-blur-sm">
+          <motion.div {...fadeProps(0)} className="inline-flex items-center gap-2 bg-gold/20 border border-gold/40 rounded-full px-4 py-1.5 mb-6 backdrop-blur-sm">
             <div className="w-2 h-2 rounded-full bg-gold animate-pulse" />
             <span className="font-body text-gold-light text-sm font-medium tracking-wide">
               CEO Corretora de Seguros
             </span>
-          </div>
+          </motion.div>
 
           {/* Headline */}
-          <h1 className="font-display text-5xl md:text-6xl lg:text-7xl text-background font-bold leading-tight mb-6">
+          <motion.h1
+            {...fadeProps(0.12)}
+            className="font-display text-5xl md:text-6xl lg:text-7xl text-background font-bold leading-tight mb-6"
+          >
             Boas mãos para{" "}
             <span className="text-gold italic">uma boa vida</span>
-          </h1>
+          </motion.h1>
 
           {/* Subtitle */}
-          <p className="font-body text-background/80 text-lg md:text-xl leading-relaxed mb-4">
+          <motion.p {...fadeProps(0.24)} className="font-body text-background/80 text-lg md:text-xl leading-relaxed mb-4">
             De seguro auto a seguro de vida, encontre a melhor opção na CEOSEG.
-          </p>
-          <p className="font-body text-background/65 text-base leading-relaxed mb-10">
+          </motion.p>
+          <motion.p {...fadeProps(0.32)} className="font-body text-background/65 text-base leading-relaxed mb-10">
             Oferecemos seguros para imóveis residenciais e comerciais, automóvel,
             cargas, vida e outros para você que quer proteger o seu patrimônio.
-          </p>
+          </motion.p>
 
           {/* CTAs */}
-          <div className="flex flex-col sm:flex-row gap-4">
+          <motion.div {...fadeProps(0.42)} className="flex flex-col sm:flex-row gap-4">
             <a
               href="http://ceoseg.aggilizador.com.br/"
               target="_blank"
@@ -77,10 +86,13 @@ const Hero = () => {
               </svg>
               Falar no WhatsApp
             </a>
-          </div>
+          </motion.div>
 
           {/* Stats */}
-          <div className="mt-14 flex items-center gap-8 pt-8 border-t border-background/20">
+          <motion.div
+            {...fadeProps(0.54)}
+            className="mt-14 flex items-center gap-8 pt-8 border-t border-background/20"
+          >
             {[
               { value: "10+", label: "Anos de experiência" },
               { value: "12", label: "Seguradoras parceiras" },
@@ -91,7 +103,7 @@ const Hero = () => {
                 <div className="font-body text-xs text-background/60 mt-1">{stat.label}</div>
               </div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </div>
 
