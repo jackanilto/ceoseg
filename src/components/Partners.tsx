@@ -22,7 +22,7 @@ const Partners = () => {
   const doubled = [...partners, ...partners];
 
   return (
-    <section id="parceiros" className="py-24 bg-secondary/50 overflow-hidden">
+    <section id="parceiros" className="py-24 bg-secondary/50" style={{ overflow: "hidden" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
         <motion.div
           ref={header.ref}
@@ -48,8 +48,11 @@ const Partners = () => {
         </motion.div>
       </div>
 
-      {/* Scrolling carousel — fullwidth but clipped */}
-      <div className="relative w-full overflow-hidden">
+      {/* Scrolling carousel — contido com clip */}
+      <div
+        className="relative"
+        style={{ overflow: "hidden", maxWidth: "100vw" }}
+      >
         {/* Fade masks */}
         <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-secondary/80 to-transparent z-10 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-secondary/80 to-transparent z-10 pointer-events-none" />
